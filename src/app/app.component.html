@@ -1,0 +1,10 @@
+<div class="ais-InstantSearch">
+  <h1>Angular InstantSearch e-commerce demo</h1>
+  <ais-instantsearch [config]="config">
+    <div class="searchbox">
+      <app-autocomplete
+        (onQuerySuggestionClick)="setQuery($event)"
+      ></app-autocomplete>
+    </div>
+  </ais-instantsearch>
+</div>

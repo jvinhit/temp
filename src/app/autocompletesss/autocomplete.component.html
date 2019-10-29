@@ -1,0 +1,23 @@
+<mat-form-field class="example-chip-list">
+  <input
+    matInput
+    [matAutocomplete]="auto"
+    (keyup)="handleChange($event)"
+    style="width: 100%; padding: 10px"
+    [formControl]="fruitCtrl"
+  />
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    style="margin-top: 30px; max-height: 600px"
+  >
+    <div *ngFor="let index of state.indices || []">
+      <mat-option
+        *ngFor="let option of index.hits"
+        [value]="option.value"
+        (click)="onQuerySuggestionClick.emit({ query: option.name })"
+      >
+        {{ option.value }}
+      </mat-option>
+    </div>
+  </mat-autocomplete>
+</mat-form-field>
