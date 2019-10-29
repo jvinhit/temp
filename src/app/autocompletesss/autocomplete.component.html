@@ -1,7 +1,7 @@
-<mat-form-field class="example-chip-list">
+<mat-form-field class="example-chip-list" [formGroup]="parentForm">
   <mat-chip-list #chipList aria-label="Merchant Tags">
     <mat-chip
-      *ngFor="let tag of merchant_tag['controls']; let i = index"
+      *ngFor="let tag of parentForm['controls'].merchant_tag['controls']; let i = index"
       [selectable]="merchantTags.selectable"
       [removable]="merchantTags.removable"
       (removed)="removeTag(i)"

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as algoliasearch from 'algoliasearch/lite';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 
 const searchClient = algoliasearch(
   'OXKZLGNU4D', //B1G2GM9NG0
@@ -28,8 +28,9 @@ export class AppComponent implements OnInit {
     this.searchParameters.query = query;
   }
   ngOnInit() {
-    this.parentForm = this.fb.group({
-      merchant_tag: [this.fb.array([])]
+    this.parentForm = new FormGroup({
+      merchant_tag: new FormArray([]),
+      name: new FormControl('')
     });
   }
 }

@@ -16,7 +16,7 @@ export class AutocompleteComponent extends BaseWidget {
     refine: Function;
     indices: object[];
   };
-  merchant_tag = new FormArray([]);
+  // merchant_tag = new FormArray([]);
   @ViewChild('merchantInput') merchantInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
   @Output() onQuerySuggestionClick = new EventEmitter<{ query: string }>();
@@ -48,7 +48,7 @@ export class AutocompleteComponent extends BaseWidget {
     if (!this.matAutocomplete.isOpen) {
       const { input, value = '' } = event;
       if (value.trim()) {
-        this.merchant_tag.push(new FormControl(value.trim()));
+        (this.parentForm.controls['merchant_tag'] as FormArray).push(new FormControl(value.trim()));
       }
       if (input) {
         input.value = '';
@@ -57,11 +57,11 @@ export class AutocompleteComponent extends BaseWidget {
   }
 
   removeTag(index: number): void {
-    this.merchant_tag.removeAt(index);
+    (this.parentForm.controls['merchant_tag'] as FormArray).removeAt(index);
   }
   selected(event: MatAutocompleteSelectedEvent): void {
     this.merchantInput.nativeElement.value = '';
     // this.onQuerySuggestionClick.emit({ query: event.option.value });
-    this.merchant_tag.push(new FormControl(event.option.value.trim()));
+    (this.parentForm.controls['merchant_tag'] as FormArray).push(new FormControl(event.option.value.trim()));
   }
 }

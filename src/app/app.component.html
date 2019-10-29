@@ -1,9 +1,16 @@
 <div class="ais-InstantSearch">
   <h1>Angular InstantSearch e-commerce demo</h1>
-  <form [formGroup]="parentForm"></form>
+  <form [formGroup]="parentForm">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Favorite food" value="Sushi" formControlName="name" />
+    </mat-form-field>
+  </form>
   <ais-instantsearch [config]="config">
     <div class="searchbox">
       <app-autocomplete [parentForm]="parentForm" (onQuerySuggestionClick)="setQuery($event)"></app-autocomplete>
     </div>
   </ais-instantsearch>
 </div>
+<pre>
+  {{ parentForm.value | json }}
+</pre>
