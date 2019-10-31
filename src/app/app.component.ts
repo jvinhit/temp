@@ -32,5 +32,7 @@ export class AppComponent implements OnInit {
       merchant_tag: new FormArray([]),
       name: new FormControl('')
     });
+    // test Path value
+    (this.parentForm.controls.merchant_tag as FormArray).push(new FormControl('asd'));
   }
 }
