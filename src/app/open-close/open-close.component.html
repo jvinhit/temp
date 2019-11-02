@@ -1,315 +1,38 @@
-<div class="page-layout carded fullwidth" fusePerfectScrollbar>
-  <div class="top-bg mat-accent-bg"></div>
-  <div class="center">
-    <div class="header white-fg" fxLayout="row" fxLayoutAlign="space-between center">
-      <div fxLayout="row" fxLayoutAlign="start center">
-        <button class="mr-0 mr-sm-16" mat-icon-button [routerLink]="CONSTANT.BASE_LINK">
-          <mat-icon>arrow_back</mat-icon>
-        </button>
-
-        <div fxLayout="column" fxLayoutAlign="start start" *fuseIfOnDom
-          [@animate]="{value:'*', params:{delay:'100ms',x:'-25px'}}">
-          <div class="h2 title-detail title-head-top">
-            <span *ngIf="pageType === appConstant.PAGE_TYPE_NEW">{{ 'NAV.MERCHANT_STORE.TITLE' | translate }}</span>
-            <span *ngIf="pageType === appConstant.PAGE_TYPE_EDIT">{{ frm.value.name }}</span>
-          </div>
-
-          <div class="subtitle secondary-text">
-            <div class="breadcrum mt-8">{{ 'NAV.MERCHANT_MANAGEMENT.TITLE' | translate }}<span class="line-slash mx-12">/</span><a [routerLink]="['/merchant-store']">{{ 'NAV.MERCHANT_STORE.TITLE' | translate }}</a><span class="line-slash mx-12">/</span><span *ngIf="pageType === appConstant.PAGE_TYPE_EDIT">{{'COMMON.EDIT' | translate}}</span><span *ngIf="pageType === appConstant.PAGE_TYPE_NEW">{{'COMMON.ADDNEW' | translate}}</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div fxLayout="row" fxLayoutAlign="end center">
-        <button *ngIf="pageType === appConstant.PAGE_TYPE_EDIT && listPermission.EditMerchantStore"
-          mat-raised-button class="mat-btn mat-reject-bg"
-          promise-btn [promiseButton]="delOb" (click)="delete()">
-          <span>{{'COMMON.DELETE' | translate}}</span>
-        </button>
-        <ng-container *ngIf="listPermission.AddNewMerchantStore || listPermission.EditMerchantStore">
-          <button mat-raised-button class="mat-btn mat-light-green-bg ml-12" [disabled]="frm.invalid"
-            promise-btn [promiseButton]="saveOb" (click)="submit(CONSTANT.OB_SAVE)">
-            <span>{{'COMMON.SAVE' | translate}}</span>
-          </button>
-
-          <!-- <button mat-raised-button class="mat-btn mat-black-light-bg ml-12" [disabled]="frm.invalid"
-            promise-btn [promiseButton]="saveAndContOb" (click)="submit(CONSTANT.OB_SAVE_AND_CONTINUE)">
-            <span>{{'COMMON.SAVEANDCONTINUE' | translate}}</span>
-          </button> -->
-        </ng-container>
-      </div>
-    </div>
-
-    <div class="content mat-white-bg mat-elevation-z4">
-      <mat-tab-group (selectedTabChange)="onChangeTab($event)">
-        <mat-tab label="Store">
-          <form *ngIf="selectedTabIndex === 0" [formGroup]="frm" fxLayout="column" class="w-100-p p-24">
-            <!-- Store Code -->
-            <mat-form-field class="w-100-p mw-70-pc">
-              <input
-                matInput [maxlength]="MAX.CODE"
-                placeholder="{{ LABEL.STORE_CODE }}"
-                formControlName="code"
-                class="text-input"
-                name="code"
-                required>
-              <mat-error *ngIf="formErrors.code">{{ formErrors.code }}</mat-error>
-              <mat-hint align="end" *ngIf="pageType === appConstant.PAGE_TYPE_NEW">{{frm.value.code.length}} / {{ MAX.CODE }}</mat-hint>
-            </mat-form-field>
-
-            <!-- Store Name -->
-            <mat-form-field class="w-100-p mw-70-pc">
-              <input
-                matInput [maxlength]="MAX.NAME"
-                placeholder="{{ LABEL.STORE_NAME }}"
-                formControlName="name"
-                class="text-input"
-                name="name"
-                required>
-              <mat-error *ngIf="formErrors.name">{{ formErrors.name }}</mat-error>
-              <mat-hint align="end">{{frm.value.name.length}} / {{ MAX.NAME }}</mat-hint>
-            </mat-form-field>
-
-            <!-- Hotline -->
-            <mat-form-field class="w-100-p mw-70-pc pr-5">
-              <input
-                matInput
-                placeholder="{{ LABEL.HOTLINE }}"
-                formControlName="phone"
-                class="text-input"
-                name="phone"
-                [maxlength]="MAX.HOTLINE"
-                required>
-              <mat-error *ngIf="formErrors.phone">{{ formErrors.phone }}</mat-error>
-              <mat-hint align="end">{{frm.value.phone.length}} / {{ MAX.HOTLINE }}</mat-hint>
-            </mat-form-field>
-
-            <!-- Telephone -->
-            <div class="w-100-p mw-70-pc pb-16">
-              <!-- Telephone Number -->
-              <mat-form-field class="w-100-p mw-50-pc pr-5">
-                <input
-                  matInput
-                  placeholder="{{ LABEL.TELEPHONE }}"
-                  formControlName="telephone"
-                  class="text-input"
-                  [maxlength]="MAX.PHONE"
-                  name="telephone">
-                <mat-error *ngIf="formErrors.telephone && !isShowTelephoneShouldBeSetValueError">{{ formErrors.telephone }}</mat-error>
-                <mat-error *ngIf="isShowTelephoneShouldBeSetValueError">{{ telephoneShouldBeSetValueError.message }}</mat-error>
-                <mat-hint align="end">{{frm.value.telephone.length}} / {{ MAX.PHONE }}</mat-hint>
-              </mat-form-field>
-              <!-- Telephone Extension -->
-              <mat-form-field class="w-100-p mw-50-pc">
-                <input
-                  matInput
-                  placeholder="{{ LABEL.TELEPHONE_EXTENSION }}"
-                  formControlName="telephoneExt"
-                  class="text-input"
-                  [maxlength]="MAX.PHONE"
-                  name="telephoneExt">
-                <mat-error *ngIf="formErrors.telephoneExt">{{ formErrors.telephoneExt }}</mat-error>
-                <mat-hint align="end">{{frm.value.telephoneExt.length}} / {{ MAX.PHONE }}</mat-hint>
-              </mat-form-field>
+<form [formGroup]="frm">
+    <div class="content" formArrayName="data">
+        <div fxLayout="row" fxLayoutAlign="start start" class="w-70-pc w-100-p" *ngFor="let item of frm.get('data').controls; let i = index" [formGroupName]="i">
+            <div class="label">
+                <label> {{ getLabelDay(i) }} </label>
             </div>
-
-            <!-- Address -->
-            <mat-form-field class="w-100-p mw-70-pc">
-              <input
-                matInput [maxlength]="MAX.ADDRESS"
-                placeholder="{{ LABEL.STORE_ADDR }}"
-                formControlName="address"
-                class="text-input"
-                name="address"
-                required>
-              <mat-error *ngIf="formErrors.address">{{ formErrors.address }}</mat-error>
-              <mat-hint align="end">{{frm.value.address.length}} / {{ MAX.ADDRESS }}</mat-hint>
-            </mat-form-field>
-
-            <!-- Province -->
-            <div class="w-100-p mw-70-pc pb-16">
-              <mat-select-searchable #provinceSelect
-                required
-                formControlName="province"
-                [disabled]="dropdown.province.isDisabled"
-                [list]="provinceList"
-                [error]="formErrors.province"
-                [placeholder]="dropdown.province.placeholder"
-                (change)="getDistricts()"
-                bindKey="code" bindValue="name"
-                name="province" id="province" class="order-location-filter"
-                role="listbox" aria-label="select province">
-              </mat-select-searchable>
-            </div>
-
-            <!-- District -->
-            <div class="w-100-p mw-70-pc pb-16">
-              <mat-select-searchable #districtSelect
-                required
-                formControlName="district"
-                [list]="districtList"
-                [disabled]="dropdown.district.isDisabled"
-                (change)="getWards()"
-                [error]="formErrors.district"
-                [placeholder]="dropdown.district.placeholder"
-                bindKey="code" bindValue="name"
-                class="order-location-filter" name="district" id="district"
-                role="listbox" aria-label="select district">
-              </mat-select-searchable>
-            </div>
-
-            <!-- Ward -->
-            <div class="w-100-p mw-70-pc pb-16">
-              <mat-select-searchable #wardSelect
-                formControlName="ward"
-                [list]="wardList"
-                [disabled]="dropdown.ward.isDisabled"
-                bindKey="code" bindValue="name"
-                [placeholder]="dropdown.ward.placeholder"
-                class="order-location-filter" name="ward"
-                id="ward" role="listbox" aria-label="select ward">
-              </mat-select-searchable>
-            </div>
-
-            <!-- Merchant -->
-            <div class="w-100-p mw-70-pc pb-16">
-              <mat-select-searchable
-                required
-                formControlName="merchant"
-                [disabled]="pageType === appConstant.PAGE_TYPE_EDIT ? true : dropdown.merchant.isDisabled"
-                [list]="merchantList"
-                (change)="getAccts()"
-                [placeholder]="dropdown.merchant.placeholder"
-                [error]="formErrors.merchant"
-                bindKey="merchant_id" bindValue="trade_name"
-                [ngClass]="{ 'merchant-filter': pageType === appConstant.PAGE_TYPE_NEW }"
-                role="listbox" aria-label="select merchant">
-              </mat-select-searchable>
-            </div>
-
-            <!-- Merchant Account -->
-            <mat-form-field class="w-100-p mw-70-pc pb-16" [ngClass]="{'submerchant-filter': dropdown.merchantAcct.isDisabled}">
-              <mat-label *ngIf="!dropdown.merchantAcct.isDisabled && !merchantAcctList.length" fxLayout="row" fxLayoutAlign="space-between">
-                {{ LABEL.MERCHANT_ACCT }}
-                <img class="spinner" src="app/themes/assets/images/loading/ellipsis_loading.gif" />
-              </mat-label>
-
-              <mat-select formControlName="merchantAcct"
-                [placeholder]="dropdown.merchantAcct.placeholder"
-                [disabled]="dropdown.merchantAcct.isDisabled">
-                <mat-option *ngIf="merchantAcctList.length">--</mat-option>
-                <mat-option *ngFor="let opt of merchantAcctList" [value]="opt.id" role="option">{{ opt.short_title }}</mat-option>
-              </mat-select>
-
-              <mat-error *ngIf="formErrors.merchantAcct && merchantAcctList.length">{{ formErrors.merchantAcct }}</mat-error>
-            </mat-form-field>
-
-            <!-- QR Service Type -->
-            <div class="w-100-p mw-70-pc pb-16">
-              <mat-select-searchable
-                multiple
-                formControlName="qrServiceType"
-                [disabled]="dropdown.qrServiceType.isDisabled"
-                [list]="rqServiceTypeList"
-                [error]="formErrors.qrServiceType"
-                [placeholder]="dropdown.qrServiceType.placeholder"
-                bindKey="id" bindValue="data"
-                name="qrServiceType" id="qrServiceType"
-                role="listbox" aria-label="select QR Service Type">
-              </mat-select-searchable>
-            </div>
-
-            <!-- Status -->
-            <mat-form-field class="w-100-p mw-70-pc pb-16">
-              <mat-select formControlName="status" name="status" placeholder="{{ LABEL.STATUS }}" required>
-                <mat-option>--</mat-option>
-                <mat-option *ngFor="let option of statusList" [value]="option">
-                  {{ option | titlecase }}
-                </mat-option>
-              </mat-select>
-
-              <mat-error *ngIf="formErrors.status">{{ formErrors.status }}</mat-error>
-            </mat-form-field>
-
-            <!-- Google Map -->
-            <div class="w-100-p mw-70-pc pb-16">
-              <mat-checkbox formControlName="isManualGeo" labelPosition="before">
-                <span class="color-6 pb-8" style="font-size: 15px">{{ LABEL.IS_MANUAL }}</span>
-              </mat-checkbox>
-            </div>
-
-            <div class="mb-20 mw-70-pc" *ngIf="!frm.value.isManualGeo">
-              <label class="color-6 pb-8 d-block" style="font-size: 15px">{{ LABEL.GOOGLE_MAP_LOCATION }}:</label>
-              <google-map #googleMap (geoChanged)="onGeoChanged($event)"></google-map>
-            </div>
-
-            <mat-form-field class="w-100-p mw-70-pc pb-16">
-              <input
-                matInput
-                placeholder="{{ LABEL.LAT }}"
-                formControlName="lat"
-                class="text-input"
-                name="lat"
-                required>
-              <mat-error *ngIf="formErrors.lat">{{ formErrors.lat }}</mat-error>
-            </mat-form-field>
-
-            <mat-form-field class="w-100-p mw-70-pc pb-16">
-              <input
-                matInput
-                placeholder="{{ LABEL.LONG }}"
-                formControlName="long"
-                class="text-input"
-                name="long"
-                required>
-              <mat-error *ngIf="formErrors.long">{{ formErrors.long }}</mat-error>
-            </mat-form-field>
-
-            <!-- store_tag -->
-            <mat-form-field class="w-100-p mw-70-pc">
-              <mat-chip-list #chipList [attr.aria-label]="LABEL.STORE_TAG">
-                <mat-chip
-                  *ngFor="let tag of frm['controls'].store_tag['controls']; let i= index;"
-                  [selectable]="storeTags.selectable"
-                  [removable]="storeTags.removable"
-                  (removed)="removeTag(i)">
-                  {{tag.value}}
-                  <mat-icon matChipRemove *ngIf="storeTags.removable">cancel</mat-icon>
-                </mat-chip>
-                <input
-                  placeholder="{{ LABEL.STORE_TAG }}"
-                  #storeTagInput
-                  [matChipInputFor]="chipList"
-                  [matChipInputSeparatorKeyCodes]="storeTags.separatorKeysCodes"
-                  [matChipInputAddOnBlur]="storeTags.addOnBlur"
-                  (matChipInputTokenEnd)="addTag($event)">
-              </mat-chip-list>
-            </mat-form-field>
-          </form>
-        </mat-tab>
-        <mat-tab label="Working Time" *ngIf="pageType=== 'edit'">
-          <form *ngIf="selectedTabIndex === 1" [formGroup]="frm" fxLayout="column" class="w-100-p p-24">
-              <div class="title-info mt-8 mb-16">
-                {{ 'Hours'}}
-              </div>
-              <div class="content" formArrayName="data">
-                <div fxLayout="row" class="w-70-pc w-100-p" *ngFor="let item of frm.get('data').controls; let i = index;" [formGroupName]="i">
-                  <div>
-                    <label> {{ getLabelDay(i) }} </label>
-                  </div>
-                  <mat-slide-toggle #isopen (change)="changeIsOpen($event)" formControlName="is_open" [checked]="item.controls.is_open.value">{{ isopen.checked ? 'Open' : 'Close' }}</mat-slide-toggle>
-                  <div >
-                      <div [fromArrayName]="times" *ngIf="isopen.checked" *ngFor="let control of times.controls; let controlIndex = index;" >
-                  
-                        </div>
-                  </div>
+            <mat-slide-toggle #isopen (change)="changeIsOpen($event, i)" formControlName="is_open" [checked]="item.controls.is_open.value">{{ isopen.checked ? 'Open' : 'Close' }}</mat-slide-toggle>
+            <div *ngIf="isopen.checked" formArrayName="times">
+                <div *ngFor="let iicontrol of getTimeControls(item); let k = index" [formGroupName]="k">
+                    <mat-form-field>
+                        <input matInput placeholder="Open at" [matAutocomplete]="auto_open" formControlName="open_at" />
+                        <mat-autocomplete #auto_open="matAutocomplete" (optionSelected)="openSelected($event, i, k)">
+                            <mat-option *ngFor="let item of dataTimes" [value]="item.value">
+                                {{ item.value }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <span class="separator" *ngIf="true">-</span>
+                    <mat-form-field *ngIf="!isOpenAllDay(i, k)">
+                        <input matInput placeholder="Close at" [matAutocomplete]="auto_close" formControlName="close_at" />
+                        <mat-autocomplete #auto_close="matAutocomplete">
+                            <mat-option *ngFor="let item of dataTimes" [value]="item.value">
+                                {{ item.value }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <ng-container *ngIf="getTimeControls(item).length <= 1 && isopen.checked; else deleteIcon">
+                        <mat-icon (click)="addTimeItem(i, k)" *ngIf="showAddButton(i, k, iicontrol)">add</mat-icon>
+                    </ng-container>
+                    <ng-template #deleteIcon>
+                        <mat-icon (click)="deleteTimeItem(i, k)">delete</mat-icon>
+                    </ng-template>
                 </div>
-              </div>
-          </form>
-        </mat-tab>
-      </mat-tab-group>
-
-      <app-spinner [isLoading]="isLoadingResults"></app-spinner>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+</form>
+<pre>{{ frm.value | json }}</pre>

@@ -10,6 +10,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DemoMaterialModule } from './material.module';
 import { OpenCloseComponent } from './open-close/open-close.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 @NgModule({
   declarations: [AppComponent, AutocompleteComponent, OpenCloseComponent],
   imports: [
@@ -18,7 +20,8 @@ import { OpenCloseComponent } from './open-close/open-close.component';
     BrowserAnimationsModule,
     DemoMaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FlexLayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]
