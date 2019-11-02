@@ -1,0 +1,38 @@
+<form [formGroup]="frm">
+    <div class="content" formArrayName="data">
+        <div fxLayout="row" fxLayoutAlign="start start" class="w-70-pc w-100-p" *ngFor="let item of frm.get('data').controls; let i = index" [formGroupName]="i">
+            <div class="label">
+                <label> {{ getLabelDay(i) }} </label>
+            </div>
+            <mat-slide-toggle #isopen (change)="changeIsOpen($event, i)" formControlName="is_open" [checked]="item.controls.is_open.value">{{ isopen.checked ? 'Open' : 'Close' }}</mat-slide-toggle>
+            <div *ngIf="isopen.checked" formArrayName="times">
+                <div *ngFor="let iicontrol of getTimeControls(item); let k = index" [formGroupName]="k">
+                    <mat-form-field>
+                        <input matInput placeholder="Open at" [matAutocomplete]="auto_open" formControlName="open_at" />
+                        <mat-autocomplete #auto_open="matAutocomplete" (optionSelected)="openSelected($event, i, k)">
+                            <mat-option *ngFor="let item of dataTimes" [value]="item.value">
+                                {{ item.value }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <span class="separator" *ngIf="true">-</span>
+                    <mat-form-field *ngIf="!isOpenAllDay(i, k)">
+                        <input matInput placeholder="Close at" [matAutocomplete]="auto_close" formControlName="close_at" />
+                        <mat-autocomplete #auto_close="matAutocomplete">
+                            <mat-option *ngFor="let item of dataTimes" [value]="item.value">
+                                {{ item.value }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <ng-container *ngIf="getTimeControls(item).length <= 1 && isopen.checked; else deleteIcon">
+                        <mat-icon (click)="addTimeItem(i, k)" *ngIf="showAddButton(i, k, iicontrol)">add</mat-icon>
+                    </ng-container>
+                    <ng-template #deleteIcon>
+                        <mat-icon (click)="deleteTimeItem(i, k)">delete</mat-icon>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<pre>{{ frm.value | json }}</pre>
